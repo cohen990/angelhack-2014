@@ -23,7 +23,6 @@ function dostuff(){
 function cookieDropAddUID(UID){
 	document.cookie="UID="+UID;
 	var x = document.cookie;
-	alert(x)
 }
 
 function getCookie(cname) {
