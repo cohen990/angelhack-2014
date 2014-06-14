@@ -1,11 +1,9 @@
 .black-card {
-  width: 100%;
   background-color: black;
   color: white;
-  padding: 30px;
-  margin: 5px;
-}
+  border: 5px solid transparent;
+  width: 100%; }
 
 .black-cards-list {
-  padding: 0;
-}
+  padding: 10px;
+  list-style: none; }

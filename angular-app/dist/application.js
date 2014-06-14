@@ -12,15 +12,16 @@
   Users.service('UsersService', [
     function() {
       this.username = '';
-      this.cards = [
-        { text: 'text 1', id: '1' },
-        { text: 'text 2', id: '2' },
-        { text: 'text 3', id: '3' }
-      ];
+      this.cards = Get3BlackCards();
   }]);
 
   Users.controller('UsersController', ['$scope', 'UsersService',
     function($scope, UsersService) {
       $scope.cards = UsersService.cards;
+
+      $scope.selectCard = function(id) {
+        alert('You clicked card with id = ' + id);
+        init(id, 'user');
+      }
   }]);
 })();

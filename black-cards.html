@@ -5,14 +5,18 @@
   <title>Angular Test</title>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <script src="app/public/js/db-api.js"></script>
+  <script src="app/public/js/card-session.js"></script>
   <script src="angular-app/dist/application.js"></script>
   <link rel="stylesheet" href="angular-app/dist/application.css">
 </head>
 <body ng-app="App">
-  <div ng-controller="UsersController">
-    <ul class="black-cards-list">
-      <li class="black-card" ng-repeat="card in cards">
-        id: {{ card.id }}, text: {{ card.text }}
+  <div ng-controller="UsersController" class="container-fluid">
+    <ul class="black-cards-list row">
+      <li class="col-sm-4 col-xs-12" ng-repeat="card in cards" ng-click="selectCard(card.id)">
+        <button class="black-card">
+          {{ card.text }}
+        </button>
       </li>
     </ul>
   </div>
