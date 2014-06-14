@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Angular Test</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <script src="angular-app/dist/application.js"></script>
+  <link rel="stylesheet" href="angular-app/dist/application.css">
+</head>
+<body ng-app="App">
+  <div ng-controller="UsersController">
+    <ul class="black-cards-list">
+      <li class="black-card" ng-repeat="card in cards">
+        id: {{ card.id }}, text: {{ card.text }}
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
