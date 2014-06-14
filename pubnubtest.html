@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>login page</title>
+    <script src=http://cdn.pubnub.com/pubnub.min.js ></script>
+</head>
+<body>
+	<script type="text/javascript">
+		
+		var pubnub = PUBNUB.init({
+	         publish_key   : 'demo',
+	         subscribe_key : 'demo'
+	     })
+
+		PUBNUB.subscribe({
+		channel : 'demo_channel',
+		message : function(m){alert(m)}
+		});
+
+		PUBNUB.publish({
+		channel : 'demo_channel',
+		message : 'Hello World!'
+		});
+	</script
+</body>
+</html>
