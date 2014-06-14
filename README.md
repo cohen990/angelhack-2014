@@ -1,4 +1,4 @@
-App: Pseudo Cards against humanity
+App: Pseudo-Cards against humanity
 
 Date: Saturday 14th June
 
