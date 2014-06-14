@@ -4,32 +4,43 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Angular Test</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+  <script src="app/public/js/angular.min.js"></script>
+  <link rel="stylesheet" href="app/public/css/mobile-angular-ui-base.css">
+  <link rel="stylesheet" href="app/public/css/mobile-angular-ui-desktop.min.css">
   <script src="app/public/js/db-api.js"></script>
   <script src="app/public/js/card-session.js"></script>
+  <script src="app/public/js/mobile-angular-ui.min.js"></script>
   <script src="angular-app/dist/application.js"></script>
   <link rel="stylesheet" href="angular-app/dist/application.css">
 </head>
 <body ng-app="App">
-  <div ng-controller="UsersController" class="container-fluid">
-    <section class="row app-section">
-      <h3>Nearby Games</h3>
-    </section>
-
-    <section class="row app-section">
-      <h3>Choose your card</h3>
-      <div class="col-sm-4 col-xs-12" ng-repeat="card in cards" ng-click="selectCard(card.id)">
-        <button class="black-card">
-          {{ card.text }}
-        </button>
+  <div ng-controller="UsersController" class="app">
+    <nav class="navbar navbar-app navbar-absolute-top">
+      <div class="navbar-brand navbar-brand-center">
+        Angular Test
       </div>
-    </section>
+    </nav>
 
-    <section class="row app-section">
-      <h3>Stats</h3>
-    </section>
+    <div class="app-body">
+      <div class="app-content">
+        <section class="app-section">
+          <h3>Nearby Games</h3>
+        </section>
+
+        <section class="app-section">
+          <h3>Choose your card</h3>
+          <div class="col-sm-4 col-xs-12" ng-repeat="card in cards" ng-click="selectCard(card.id)">
+            <button class="black-card">
+              {{ card.text }}
+            </button>
+          </div>
+        </section>
+
+        <section class="app-section">
+          <h3>Stats</h3>
+        </section>
+      </div>
+    </div>
   </div>
 </body>
 </html>
