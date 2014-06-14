@@ -10,7 +10,7 @@ function dostuff(){
 	    url: uri,
 	    success: function(data){
 	    	cookieDropAddUID(data);
-	    	var url = "dash.html";    
+	    	var url = "black-cards.html";    
 			$(location).attr('href',url);
 	    	}
 	    }
