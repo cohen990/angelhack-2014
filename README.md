@@ -8,7 +8,7 @@ Structure:
 Mysql database
 	-> contains user info and card data
 
-PHP backend
+PHP backend (codeigniter framework)
 	-> Accesses mysql database
 Angularjs frontend
 	-> Generates user gui/displays cards
