@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Angular Test</title>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.0.1/angular.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -12,13 +14,22 @@
 </head>
 <body ng-app="App">
   <div ng-controller="UsersController" class="container-fluid">
-    <ul class="black-cards-list row">
-      <li class="col-sm-4 col-xs-12" ng-repeat="card in cards" ng-click="selectCard(card.id)">
+    <section class="row app-section">
+      <h3>Nearby Games</h3>
+    </section>
+
+    <section class="row app-section">
+      <h3>Choose your card</h3>
+      <div class="col-sm-4 col-xs-12" ng-repeat="card in cards" ng-click="selectCard(card.id)">
         <button class="black-card">
           {{ card.text }}
         </button>
-      </li>
-    </ul>
+      </div>
+    </section>
+
+    <section class="row app-section">
+      <h3>Stats</h3>
+    </section>
   </div>
 </body>
 </html>
