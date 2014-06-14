@@ -1,4 +1,36 @@
+function parseData(data){
+	var _data = [];
+	for(var i in data){
+	  		var newCard = {
+	  			text:data[i].text,
+	  			id:data[i].id_bc
+	  		};
+	  		_data.push(newCard);
+    }
+    return(_data);
+}
+
+function writeCard(card){
+	document.write("<div><span>"+card.text+"</span>     <span>"+card.id+"</span></div>")
+}
+
 function Get3BlackCards(){
+	var uri = "http://37.187.225.223/angel/index.php/api/getRandomBlackCard/2";
+	var _data = [];
+	var _returnData;
+
+	$.ajax({
+	    dataType: "json",
+	    url: uri,
+	    success: function(data){
+	    	var rData=parseData(data);	  	
+	    	for(var i in rData){
+	    		writeCard(rData[i]);
+	    	}
+	    }
+	});
+
+/*
 	var card1= {
 		text:"London is like the world capital of {0}.",
 		id:"1"
@@ -14,5 +46,39 @@ function Get3BlackCards(){
 
 	result = [card1,card2,card3];
 
+	return result;*/
+	return(_returnData);
+}
+
+// Takes a blackList - a list of whiteCard IDs and if any of the white cards it
+// grabs from the databse is in the blackList then it discards them and gets a
+// new one.
+function GetWhiteHand(blackList){
+	// call api to get a white hand
+	var card1= {
+		text:"A pit of unfiltered hatred.",
+		id:"1"
+	};
+	var card2 = {
+		text:"You're mum's ironing board.",
+		id:"2"
+	};
+	var card3 = {
+		text:"Hitler in a bunny suit.",
+		id:"3"
+	};
+	var card4 = {
+		text:"An erection chasing you down the hall.",
+		id:"4"
+	};
+	var card5 = {
+		text:"Coffee.",
+		id:"5"
+	};
+
+	result = [card1,card2,card3,card4,card5];
 	return result;
+}
+window.onload=function(){
+	Get3BlackCards();
 }
