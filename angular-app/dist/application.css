@@ -11,6 +11,7 @@ html, body {
 
 @media (max-width: 768px) {
   .black-card {
-    margin-bottom: 30px; } }
+    margin-bottom: 30px;
+    height: 150px; } }
 .app-section {
   padding: 20px; }
