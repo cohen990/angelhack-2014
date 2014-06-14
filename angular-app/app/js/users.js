@@ -14,7 +14,6 @@
       $scope.cards = UsersService.cards;
 
       $scope.selectCard = function(id) {
-        alert('You clicked card with id = ' + id);
         init(id, 'user');
       }
   }]);
