@@ -1,10 +1,14 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>login page</title>
+    <script src="app\public\js\jquery-1.10.2.js"></script>
+    <script src="login.js"></script>
 </head>
 <body>
-	<a href="dash.html">login here</a>
+	<form name="login-form" action="javascript:dostuff();"method="get" class="loginform">
+	Username: <input type="text" name="name" class="username">
+	<input type="submit" value="Submit">
+	</form>
 </body>
 </html>
