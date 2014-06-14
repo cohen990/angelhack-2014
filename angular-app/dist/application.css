@@ -1,0 +1,11 @@
+.black-card {
+  width: 100%;
+  background-color: black;
+  color: white;
+  padding: 30px;
+  margin: 5px;
+}
+
+.black-cards-list {
+  padding: 0;
+}
