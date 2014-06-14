@@ -1,7 +1,12 @@
 (function() {
   'use strict';
 
-  window.App = angular.module('App', ['Users', 'mobile-angular-ui']);
+  window.App = angular.module('App', ['Users', 'mobile-angular-ui', 'ngRoute']);
+
+  window.App.config(function($routeProvider, $locationProvider) {
+    $routeProvider.when('/', { templateUrl: 'templates/new-game.html' });
+    $routeProvider.when('/search', { templateUrl: 'templates/search-games.html' });
+  });
 })();
 
 (function() {
