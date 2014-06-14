@@ -1,0 +1,28 @@
+
+.serverList{
+	max-width: 485px;
+	border: 1px solid #ccc;
+	padding: 7px;
+	float:left;
+	margin-right: 10px;
+	position: relative;
+}
+.serverList h2{
+	padding:0;
+	margin: 0;
+}
+.serverList .editor{
+	position: absolute;
+	top:7px;
+	right:7px;
+	visibility: hidden;
+}
+.serverList:hover .editor{
+	visibility: visible;
+}
+#sb-container{
+	z-index: 9999 !important;
+}
+#sb-body{
+	background: #fff !important;
+}
