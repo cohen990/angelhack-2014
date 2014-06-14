@@ -4,6 +4,13 @@
     <title>login page</title>
     <script src="app\public\js\jquery-1.10.2.js"></script>
     <script src="login.js"></script>
+    <script>
+    	var uid = getCookie("UID");
+    	if(uid){
+	    	var url = "dash.html";    
+			$(location).attr('href',url);
+    	}
+    </script>
 </head>
 <body>
 	<form name="login-form" action="javascript:dostuff();"method="get" class="loginform">
