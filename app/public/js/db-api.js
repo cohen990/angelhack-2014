@@ -1,4 +1,4 @@
-function Get3BlackCardsMock(){
+function Get3BlackCards(){
 	var card1= {
 		text:"London is like the world capital of {0}.",
 		id:"1"
