@@ -1,10 +1,21 @@
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>login page</title>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="login.js"></script>
+    <script>
+    	var uid = getCookie("UID");
+    	if(uid){
+	    	var url = "black-cards.html";    
+			$(location).attr('href',url);
+    	}
+    </script>
 </head>
 <body>
-	<a href="dash.html">login here</a>
+	<form name="login-form" action="javascript:dostuff();"method="get" class="loginform">
+	Username: <input type="text" name="name" class="username">
+	<input type="submit" value="Submit">
+	</form>
 </body>
 </html>

@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="app/public/css/mobile-angular-ui-desktop.min.css">
   <script src="app/public/js/db-api.js"></script>
   <script src="app/public/js/card-session.js"></script>
+  <script src="login.js"></script>
   <script src="app/public/js/jquery-1.10.2.js"></script>
   <script src="app/public/js/angular-route.min.js"></script>
   <script src="app/public/js/angular-touch.min.js"></script>
@@ -17,18 +18,28 @@
   <link rel="stylesheet" href="angular-app/dist/application.css">
 </head>
 <body ng-app="App" class="ng-scope has-sidebar-left">
-  <div ng-include="'templates/sidebar.html'" id="mainSidebar" toggleable
+  <div ng-include="'templates/sidebar.html'" id="main-sidebar" toggleable
     class="sidebar sidebar-left" parent-active-class="sidebar-left-in"></div>
+
+  <div ng-include="'templates/right-sidebar.html'" id="right-sidebar" toggleable
+    class="sidebar sidebar-right" parent-active-class="sidebar-right-in"
+    ng-controller="UserNotificationsController"></div>
 
   <div ng-controller="UsersController" class="app has-navbar-top">
     <nav class="navbar navbar-app navbar-absolute-top">
       <div class="navbar-brand navbar-brand-center">
-        Angular Test
+        <span>Cards Against Humanity</span>
       </div>
 
       <div class="btn-group pull-left">
-        <div class="btn btn-navbar sidebar-toggle" ng-click="toggle('mainSidebar')">
+        <div class="btn btn-navbar sidebar-toggle" ng-click="toggle('main-sidebar')">
           <i class="fa fa-bars"></i> Menu
+        </div>
+      </div>
+
+      <div class="btn-group pull-right" yield-to="navbarAction">
+        <div class="btn btn-navbar" ng-click="toggle('right-sidebar')">
+          <i class="fa fa-bell-o"></i> News
         </div>
       </div>
     </nav>
@@ -42,12 +53,26 @@
   </div>
 
   <script id="templates/sidebar.html" type="text/ng-template">
-    <h1 class="app-name">Main Sidebar</h1>
+    <h1 class="app-name">Options</h1>
     <div class="sidebar-scrollable scrollable">
       <div class="scrollable-content">
-        <div class="list-group" toggle="off" bubble target="mainSidebar">
-          <a class="list-group-item" href="#/">Home <i class="fa fa-chevron-right pull-right"></i></a>
-          <a class="list-group-item" href="#/search">Search <i class="fa fa-chevron-right pull-right"></i></a>
+        <div class="list-group" toggle="off" bubble target="main-sidebar">
+          <a class="list-group-item" href="#/">Search <i class="fa fa-chevron-right pull-right"></i></a>
+          <a class="list-group-item" href="#/new-game">New Game<i class="fa fa-chevron-right pull-right"></i></a>
+          <a class="list-group-item" href="#/stats">My Stats<i class="fa fa-chevron-right pull-right"></i></a>
+        </div>
+      </div>
+    </div>
+  </script>
+
+  <script id="templates/right-sidebar.html" type="text/ng-template">
+    <h1 class="app-name">Notifications</h1>
+    <div class="sidebar-scrollable scrollable">
+      <div class="scrollable-content">
+        <div class="list-group" toggle="off" bubble target="right-sidebar">
+          <button class="list-group-item btn notification" ng-repeat="notification in notifications">
+            {{ notification.text }}
+          </button>
         </div>
       </div>
     </div>
@@ -56,7 +81,7 @@
   <script type="text/ng-template" id="templates/new-game.html">
     <div class="app-content">
       <h3>Choose your card</h3>
-      <div class="col-sm-4 col-xs-12" ng-repeat="card in cards" ng-click="selectCard(card.id)">
+      <div class="col-sm-4 col-xs-12" ng-repeat="card in blackCards" ng-click="selectCard(card.id_bc)">
         <button class="black-card">
           {{ card.text }}
         </button>
@@ -67,6 +92,12 @@
   <script type="text/ng-template" id="templates/search-games.html">
     <div class="app-content">
       <h3>Search for nearby games</h3>
+    </div>
+  </script>
+
+  <script type="text/ng-template" id="templates/stats.html">
+    <div class="app-content">
+      <h3>My Stats</h3>
     </div>
   </script>
 </body>

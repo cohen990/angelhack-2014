@@ -1,5 +1,5 @@
 function Get3BlackCards(callback) {
-	var uri = "http://37.187.225.223/angel/index.php/api/getRandomBlackCard/2";
+	var uri = "http://37.187.225.223/angel/index.php/api/getRandomBlackCard/3";
 	var _data = [];
 	var _returnData;
 
