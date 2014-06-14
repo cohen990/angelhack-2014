@@ -1,31 +1,10 @@
 <script src=http://cdn.pubnub.com/pubnub.min.js ></script>
+<script src="app/public/js/pubnub.js"></script>
 <script>
 
-var pubnub = PUBNUB.init({
-    publish_key   : 'pub-c-d03f926e-5fb8-43a3-9a7f-4e2427bb4f35',
-    subscribe_key : 'sub-c-aa73bdce-f3bd-11e3-bffd-02ee2ddab7fe'
-})
+pubnub = PubNubInit();
 
-function doPubNub(pubnub, message){
-    pubnub.subscribe({
-         channel : "printtest",
-         message : function(m){ printstuff(m) },
-         connect : publish
-    })
- 
-    function publish() {
-        pubnub.publish({
-            channel : "printtest",
-            message : message
-        })
-    }
- };
+var channelName = "helloworld"
 
-function printstuff(message){
-	console.log(message);
-	alert(message);
-}
-
-doPubNub(pubnub, "Hi")
-
+pubnub = subscribe(pubnub, channelName);
 </script>
