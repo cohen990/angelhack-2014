@@ -1,20 +1,4 @@
-function parseData(data){
-	var _data = [];
-	for(var i in data){
-	  		var newCard = {
-	  			text:data[i].text,
-	  			id:data[i].id_bc
-	  		};
-	  		_data.push(newCard);
-    }
-    return(_data);
-}
-
-function writeCard(card){
-	document.write("<div><span>"+card.text+"</span>     <span>"+card.id+"</span></div>")
-}
-
-function Get3BlackCards(){
+function Get3BlackCards(callback) {
 	var uri = "http://37.187.225.223/angel/index.php/api/getRandomBlackCard/2";
 	var _data = [];
 	var _returnData;
@@ -22,12 +6,7 @@ function Get3BlackCards(){
 	$.ajax({
 	    dataType: "json",
 	    url: uri,
-	    success: function(data){
-	    	var rData=parseData(data);	  	
-	    	for(var i in rData){
-	    		writeCard(rData[i]);
-	    	}
-	    }
+	    success: callback
 	});
 
 /*
