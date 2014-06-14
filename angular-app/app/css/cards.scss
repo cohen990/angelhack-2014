@@ -1,6 +1,10 @@
 $black: #000;
 $white: #fff;
 
+html, body {
+  background-color: #fafafa;
+}
+
 .black-card {
   background-color: $black;
   color: $white;
@@ -8,9 +12,6 @@ $white: #fff;
   width: 100%;
   font-size: 1.2em;
   height: 200px;
-}
-
-.card {
 }
 
 @media (max-width: 768px) {

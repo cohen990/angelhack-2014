@@ -1,3 +1,6 @@
+html, body {
+  background-color: #fafafa; }
+
 .black-card {
   background-color: black;
   color: white;
