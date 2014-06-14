@@ -6,9 +6,19 @@ $white: #fff;
   color: $white;
   border: 5px solid transparent;
   width: 100%;
+  font-size: 1.2em;
+  height: 200px;
 }
 
-.black-cards-list {
-  padding: 10px;
-  list-style: none;
+.card {
+}
+
+@media (max-width: 768px) {
+  .black-card {
+    margin-bottom: 30px;
+  }
+}
+
+.app-section {
+  padding: 20px;
 }
