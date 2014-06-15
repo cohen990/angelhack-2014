@@ -14,7 +14,6 @@ function subscribe(pubnub, channelName){
          message : function(m){ alert(m) },
         connect: function(m){ }
     })
-    alert("sub");
     return pubnub;
 }
  
@@ -23,12 +22,10 @@ function publish(pubnub, channelName, message) {
         channel : channelName,
         message : message
     })
-    alert("pub");
     return pubnub;
 }
 
 function printstuff(message){
-    alert("print");
 	console.log(message);
 	alert(message);
 }

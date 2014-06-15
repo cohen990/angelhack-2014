@@ -1,10 +1,25 @@
-<script src=http://cdn.pubnub.com/pubnub.min.js ></script>
-<script src="app/public/js/pubnub.js"></script>
-<script>
+ <script src=http://cdn.pubnub.com/pubnub.min.js ></script>
+ <script>
 
-pubnub = PubNubInit();
+ (function(){
+ 
+     var pubnub = PUBNUB.init({
+         publish_key   : 'pub-c-d03f926e-5fb8-43a3-9a7f-4e2427bb4f35',
+         subscribe_key : 'sub-c-aa73bdce-f3bd-11e3-bffd-02ee2ddab7fe'
+     })
+ 
+     pubnub.subscribe({
+         channel : "getRandomWhiteCards",
+         message : function(m){ console.log(m) },
+         connect : publish
+     })
+ 
+     publish publish() {
+         pubnub.publish({
+             channel : "getRandomWhiteCards",
+             message : "5"
+         })
+     }
+ })();
 
-var channelName = "helloworld"
-
-pubnub = subscribe(pubnub, channelName);
-</script>
+ </script>
