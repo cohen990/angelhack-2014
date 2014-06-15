@@ -25,15 +25,15 @@
       self.listeners.push(listener);
     };
 
-    self.publishNewGame = function(sid, uid) {
+    self.publish = function(message) {
       self.pubnubHandle.publish({
         channel: 'globalNewGame',
-        message: {
-          type: 'new-game',
-          sid: sid,
-          uid: uid
-        }
+        message: message
       });
     };
+
+    self.history = function() {
+      return self.pubnubHandle.history();
+    }
   }]);
 })();

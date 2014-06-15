@@ -67,12 +67,20 @@
 (function() {
   'use strict';
 
-  angular.module('Games').controller('GameNotificationsController', ['$scope', 'UsersService',
-    function($scope, UsersService) {
+  angular.module('Games').controller('GameNotificationsController', ['$scope', 'UsersService', '$cookies',
+    function($scope, UsersService, $cookies) {
       $scope.notifications = [];
 
-      $scope.onNotificationsUpdate = function(notifications) {
-        $scope.notifications = notifications;
+      $scope.onNotificationsUpdate = function(data) {
+        $scope.notifications = [];
+        for (var i = 0; i < data.length; i++) {
+          if (data[i].uid === $cookies.UID) {
+            $scope.notifications.push(data[i]);
+          }
+        }
+        if (!$scope.$$phase) {
+          $scope.$digest();
+        }
       }
 
       UsersService.addNotificationObserver($scope);
@@ -87,57 +95,35 @@
     function($scope, $routeParams, UsersService, $http, $cookies) {
       $scope.game = null;
 
-      $scope.submitResponse = function(whiteCardId) {
-        UsersService.submitResponseFor($scope.game.blackCard, whiteCardId, function() {
-          console.log('Success!');
-        });
+      $scope.submitResponse = function(whiteCard) {
+        UsersService.submitResponseFor($scope.game.blackCard, whiteCard);
       };
 
-      $scope.onNotificationsUpdate = function(notifications) {
-        console.log('updated');
-        if ($routeParams.gameUID && UsersService.currentSessions) {
-          var found = false;
-          for (var i = 0; i < notifications.length; i++) {
-            if (notifications[i].id_sbc === $routeParams.gameUID) {
-              $scope.game = {
-                blackCard: notifications[i],
-                mine: true,
-                responses: null
-              };
-              console.log('found');
-              console.log(notifications[i]);
-              UsersService.getResponsesFor(notifications[i].id_sbc,
-                function(data, status, headers, config) {
-                  $scope.game.responses = data;
-              });
-              found = true;
+      $scope.onNotificationsUpdate = function(cards) {
+        UsersService.getBlackCard($routeParams.gameUID, function(data) {
+          $scope.game = {
+            blackCard: data,
+            mine: (data.uid === $cookies.UID)
+          }
+
+          $scope.game.myResponse = null;
+          for (var i = 0; i < data.responses.length; i++) {
+            if (data.responses[i].uid === $cookies.UID) {
+              $scope.game.myResponse = data.responses[i];
               break;
             }
           }
 
-          if (!found) {
-            console.log('not found');
-            $scope.game = {
-              blackCard: null,
-              mine: false,
-              choices: null
-            };
-            UsersService.getBlackCard($routeParams.gameUID, function(data) {
-              $scope.game = {
-                blackCard: data[0],
-                mine: (data[0].fk_uid === $cookies.UID),
-                choices: null
-              }
-            });
+          if ($scope.game.mine !== true && !$scope.game.myResponse) {
             UsersService.getRandomChoices(function(data, status, headers, config) {
-              $scope.game = {
-                blackCard: $scope.game.blackCard,
-                mine: (data[0].fk_uid === $cookies.UID),
-                choices: data
-              }
+              $scope.game.choices = data;
             });
           }
-        }
+
+          if(!$scope.$$phase) {
+            $scope.$digest();
+          }
+        });
       };
 
       UsersService.addNotificationObserver($scope);
@@ -162,6 +148,7 @@
         } else {
           $scope.sessions = sessions;
         }
+        if (!$scope.$$phase) $scope.$digest();
       });
   }]);
 })();
@@ -176,18 +163,23 @@
         return;
       }
 
-      $scope.blackCards = [];
+      $scope.blackCards = null;
+      UsersService.getNewBlackCards(function(data) {
+        $scope.blackCards = data;
 
-      $scope.onBlackCardsAdded = function(cards) {
-        $scope.blackCards = cards;
-      };
+        if (!$scope.$$phase) $scope.$digest();
+      });
 
-      UsersService.addObserver($scope);
       $scope.selectCard = function(blackCard) {
-        var uid = UsersService.generateGUID();
-        UsersService.startNewGame(blackCard, uid, function(data, status, header, config) {
-          $location.path('/game/' + uid);
+        UsersService.getNewBlackCards(function(data) {
+          $scope.blackCards = data;
         });
+
+        var uid = UsersService.generateGUID();
+        UsersService.startNewGame(blackCard, uid);
+        $location.path('/game/' + uid);
+
+        if (!$scope.$$phase) $scope.$digest();
       };
   }]);
 })();
@@ -265,16 +257,16 @@
       self.listeners.push(listener);
     };
 
-    self.publishNewGame = function(sid, uid) {
+    self.publish = function(message) {
       self.pubnubHandle.publish({
         channel: 'globalNewGame',
-        message: {
-          type: 'new-game',
-          sid: sid,
-          uid: uid
-        }
+        message: message
       });
     };
+
+    self.history = function() {
+      return self.pubnubHandle.history();
+    }
   }]);
 })();
 
@@ -299,6 +291,7 @@
 
       $scope.submit = function(user) {
         var uri = UsersService.BASE_URL + '/getLoginInformation/' + user.name;
+        UsersService.username = user.name;
         $http({method: 'GET', url: uri}).success(function(data, status, headers, config) {
           $cookies.UID = data;
           $location.path('/games');
@@ -317,9 +310,12 @@
       self.BASE_URL = BASE_URL;
       self.observers = [];
       self.notificationsObserver = [];
-      self.blackCards = null;
+      self.blackCards = [];
+      window.black = self.blackCards;
+      self.whiteCards = [];
       self.currentSessions = [];
       self.availableSessions = null;
+      self.username = null;
 
       self.generateGUID = function() {
         function s4() {
@@ -332,71 +328,74 @@
                      s4() + '-' + s4() + s4() + s4();
       };
 
-      PubNubService.addMessageListener(function(message) {
-        if (message.uid === $cookies.UID) return;
-
+      self.onMessage = function(message) {
+        console.log(message);
         switch (message.type) {
           case 'new-game':
-            self.getBlackCard(message.uid, function(data) {
-              self.addBlackCard.apply(self, data);
-            });
+            self.addBlackCard(message.payload);
+            break
+
+          case 'new-response':
+            self.addWhiteCard(message.payload);
             break
 
           default:
             console.log('DEFAULT');
             console.log(message);
         }
-      });
+      };
+
+      PubNubService.addMessageListener(self.onMessage);
 
       self.getBlackCard = function(uid, callback) {
-        var uri = self.BASE_URL + '/getGameSessionBlackCard/' + uid;
-        $http({method: 'GET', url: uri}).success(function(data, status, headers, config) {
-          if (data.error) {
-            console.log(data.error);
-          } else {
-            self.addBlackCard.apply(self, data);
-            callback(data);
+        for (var i = 0; i < self.blackCards.length; i++) {
+          if (self.blackCards[i].sid === uid) {
+            callback(self.blackCards[i]);
+            return self.blackCards[i];
           }
-        }).error(function(e) {
-          console.log(e);
-        });
+        }
       }
 
       self.getAvailableSessions = function(callback) {
-        if (self.availableSessions) {
-          callback(self.availableSessions);
-        } else {
-          var uri = BASE_URL + '/getAllGamesAvailable/' + $cookies.UID;
-          $http({method: 'GET', url: uri})
-            .success(function(data, status, headers, config) {
-              self.availableSessions = data;
-              callback(data);
-            });
+        var array = [];
+        for (var i = 0; i < self.blackCards.length; i++) {
+          if (self.blackCards[i].uid !== $cookies.UID) {
+            array.push(self.blackCards[i]);
+          }
         }
+        callback(array);
+        return array;
       };
 
       self.getResponsesFor = function(blackCardId, callback) {
-        var uri = BASE_URL + '/getGameResponse/' + blackCardId;
-        $http({method: 'GET', url: uri}).success(callback);
+        var card = self.getBlackCard(sid);
+        callback(card.responses);
+        return card.responses;
       };
 
-      self.startNewGame = function(blackCard, sid, callback) {
-        PubNubService.publishNewGame(sid, $cookies.UID);
-
-        var uri = BASE_URL + '/setGameSession/' + $cookies.UID + '/' +
-          blackCard.id_bc + '/' + sid + '/' +
-          Math.floor((new Date())/1000);
-        $http({method: 'GET', url: uri})
-          .success(callback).error(function(error) {
-            console.log(error);
-            alert(error);
-          });
+      self.startNewGame = function(blackCard, sid) {
+        PubNubService.publish({
+          type: 'new-game',
+          payload: {
+            sid: sid,
+            uid: $cookies.UID,
+            username: self.username,
+            text: blackCard.text,
+            responses: []
+          }
+        });
       };
 
-      self.submitResponseFor = function(blackCard, whiteCardId, callback) {
-        var uri = BASE_URL + '/setGameResponse/' + $cookies.UID + '/' +
-          whiteCardId + '/' + blackCard.sid + '/' + blackCard.id_sbc;
-        $http({method: 'GET', url: uri}).success(callback);
+      self.submitResponseFor = function(blackCard, whiteCard) {
+        PubNubService.publish({
+          type: 'new-response',
+          payload: {
+            blackCardSID: blackCard.sid,
+            uid: $cookies.UID,
+            username: self.username,
+            text: whiteCard.text
+          }
+        });
       };
 
       self.getRandomChoices = function(callback) {
@@ -404,20 +403,20 @@
         $http({method: 'GET', url: uri}).success(callback);
       };
 
-      self.addObserver = function(observer) {
-        if (self.blackCards) {
-          observer.onBlackCardsAdded(self.blackCards);
-        }
-        if (self.observers.indexOf(observer) === -1) {
-          self.observers.push(observer);
+      self.addBlackCard = function() {
+        self.blackCards.push.apply(self.blackCards, arguments);
+        for (var i = 0; i < self.notificationsObserver.length; i++) {
+          self.notificationsObserver[i].onNotificationsUpdate(self.blackCards);
         }
       };
 
-      self.addBlackCard = function() {
-        self.currentSessions.push.apply(self.currentSessions, arguments);
-        for (var i = 0; i < self.notificationsObserver; i++) {
-          self.notificationsObserver[i].onNotificationsUpdate(self.currentSessions);
-        }
+      self.addWhiteCard = function(card) {
+        self.getBlackCard(card.blackCardSID, function(blackCard) {
+          blackCard.responses.push(card);
+          for (var i = 0; i < self.notificationsObserver.length; i++) {
+            self.notificationsObserver[i].onNotificationsUpdate(self.blackCards);
+          }
+        });
       };
 
       self.addNotificationObserver = function(observer) {
@@ -427,26 +426,8 @@
         self.notificationsObserver.push(observer);
       };
 
-
-      if ($cookies.UID) {
-        var uri = BASE_URL + '/getGameSession/' + $cookies.UID;
-        $http({method: 'GET', url: uri})
-          .success(function(data, status, headers, config) {
-            if (data.error) {
-              alert(data.error);
-            } else {
-              self.addBlackCard.apply(self, data);
-            }
-          });
+      self.getNewBlackCards = function(callback) {
+        Get3BlackCards(callback);
       }
-
-      Get3BlackCards(function(data) {
-        for (var i = 0; i < self.observers.length; i++) {
-          self.observers[i].$apply(function(scope) {
-            scope.onBlackCardsAdded(data);
-          });
-        }
-        self.blackCards = data;
-      });
   }]);
 })();
