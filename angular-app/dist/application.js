@@ -3,7 +3,7 @@
 
   window.App = angular.module('App', ['Games', 'Users', 'mobile-angular-ui',
                               'ngRoute', 'ngTouch', 'GeoLocation', 'ngAnimate',
-                              'Animations']);
+                              'Animations', 'Filters', 'ngSanitize']);
 
   window.App.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', { templateUrl: 'templates/all-games.html' });
@@ -36,6 +36,22 @@
         }
       };
   }]);
+})();
+
+(function() {
+  'use strict';
+
+  angular.module('Filters', []);
+})();
+
+(function() {
+  'use strict';
+
+  angular.module('Filters').filter('blackCardText', function() {
+    return function(text) {
+      return text.replace(/_+/g, '<span class="card-blank">           </span>');
+    };
+  });
 })();
 
 (function() {

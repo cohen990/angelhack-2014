@@ -15,6 +15,7 @@
   <script src="app/public/js/angular-cookies.min.js"></script>
   <script src="app/public/js/angular-touch.min.js"></script>
   <script src="app/public/js/angular-animate.min.js"></script>
+  <script src="app/public/js/angular-sanitize.min.js"></script>
   <script src="app/public/js/mobile-angular-ui.min.js"></script>
   <script src="angular-app/dist/application.js"></script>
   <link rel="stylesheet" href="angular-app/dist/application.css">
@@ -89,8 +90,7 @@
         <h3>Choose your card</h3>
         <div class="col-sm-4 col-xs-12" ng-repeat="card in blackCards"
           ng-click="selectCard(card.id_bc)">
-          <button class="black-card">
-            {{ card.text }}
+          <button class="black-card" ng-bind-html="card.text | blackCardText">
           </button>
         </div>
       </div>
@@ -103,9 +103,7 @@
         <h3>Nearby Games</h3>
         <div class="col-xs-12 col-sm-6" ng-repeat="session in sessions" data-index="{{sessions.indexOf(session)}}">
           <a href="" ng-href="#/game/{{session.fk_blackCards}}">
-            <button class="black-card">
-              Missing Text {{session.text}}
-            </button>
+            <button class="black-card" ng-bind-html="('Missing Text ' + session.text) | blackCardText"></button>
           </a>
         </div>
       </div>
@@ -121,7 +119,7 @@
   <script type="text/ng-template" id="templates/show-game.html">
     <div class="scrollable" ng-controller="GamesController">
       <div class="scrollable-content">
-        <button class="black-card">{{ game.blackCard.text }}</button>
+        <button class="black-card" ng-bind-html="game.blackCard.text | blackCardText"></button>
         <div ng-if="game.mine">
           <div class="col-xs-6 col-sm-4" ng-repeat="response in game.responses">
             <button class="white-card">
