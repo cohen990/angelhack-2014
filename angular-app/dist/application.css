@@ -1,27 +1,68 @@
+a.list-group-item.active {
+  background-color: #555555;
+  border-color: #555555; }
+  a.list-group-item.active:hover, a.list-group-item.active:focus {
+    background-color: #333333;
+    border-color: #333333; }
+
+.navbar-app, .navbar-app .btn, .navbar-app .btn-navbar {
+  color: #333333; }
+
+.sidebar-left .list-group-item {
+  font-size: 1.5em; }
+
+.scrollable:not(.sidebar-scrollable) .scrollable-content {
+  padding-top: 20px; }
+
 .black-card {
   background-color: black;
   color: white;
+  position: relative;
   border: 5px solid transparent;
   width: 100%;
-  font-size: 1.5em;
-  height: 200px;
-  margin-bottom: 30px; }
+  font-size: 1.3em;
+  min-height: 200px;
+  margin-bottom: 30px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  border-radius: 10px;
+  padding-bottom: 1em; }
+  .black-card::after {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    content: "Cards Against Humanity";
+    font-size: 0.6em; }
 
+@media (max-width: 768px) {
+  .black-card {
+    min-height: 150px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px; } }
 .white-card {
-  margin-top: 20px;
+  margin-bottom: 20px;
   background-color: white;
-  height: 150px;
+  min-height: 150px;
   width: 100%;
-  font-size: 1.3em; }
+  font-size: 1.3em;
+  border: none;
+  padding-bottom: 1em;
+  -webkit-border-radius: 8px;
+  -moz-border-radius: 8px;
+  border-radius: 8px; }
+  .white-card::after {
+    position: absolute;
+    bottom: 20px;
+    right: 2.5em;
+    content: "Cards Against Humanity";
+    font-size: 0.6em; }
 
 .card-blank {
   color: red;
   text-decoration: underline;
   white-space: pre; }
 
-@media (max-width: 768px) {
-  .black-card {
-    height: 150px; } }
 .notification {
   white-space: normal;
   width: 100%; }

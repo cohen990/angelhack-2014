@@ -1,5 +1,31 @@
 $black: #000;
 $white: #fff;
+$gray: #333;
+$lighter-gray: #555;
+
+a.list-group-item.active {
+  background-color: $lighter-gray;
+  border-color: $lighter-gray;
+
+  &:hover, &:focus {
+    background-color: $gray;
+    border-color: $gray;
+  }
+}
+
+.navbar-app {
+  &, .btn, .btn-navbar {
+    color: $gray;
+  }
+}
+
+.sidebar-left .list-group-item {
+  font-size: 1.5em;
+}
+
+.scrollable:not(.sidebar-scrollable) .scrollable-content {
+  padding-top: 20px;
+}
 
 @mixin css-transition($args...) {
   -webkit-transition: $args;
@@ -17,34 +43,65 @@ $white: #fff;
   transform: $args;
 }
 
+@mixin css-border-radius($args...) {
+  -webkit-border-radius: $args;
+  -moz-border-radius: $args;
+  border-radius: $args;
+}
+
 .black-card {
   background-color: $black;
   color: $white;
+  position: relative;
   border: 5px solid transparent;
   width: 100%;
-  font-size: 1.5em;
-  height: 200px;
+  font-size: 1.3em;
+  min-height: 200px;
   margin-bottom: 30px;
+  @include css-border-radius(10px);
+  padding-bottom: 1em;
+
+  &::after {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    content: "Cards Against Humanity";
+    font-size: 0.6em;
+  }
 }
 
+@media (max-width: 768px) {
+  .black-card {
+    min-height: 150px;
+    @include css-border-radius(8px);
+  }
+}
+
+$white-card-margin-bottom: 20px;
+
 .white-card {
-  margin-top: 20px;
+  margin-bottom: $white-card-margin-bottom;
   background-color: $white;
-  height: 150px;
+  min-height: 150px;
   width: 100%;
   font-size: 1.3em;
+  border: none;
+  padding-bottom: 1em;
+  @include css-border-radius(8px);
+
+  &::after {
+    position: absolute;
+    bottom: $white-card-margin-bottom;
+    right: 2.5em;
+    content: "Cards Against Humanity";
+    font-size: 0.6em;
+  }
 }
 
 .card-blank {
   color: red;
   text-decoration: underline;
   white-space: pre;
-}
-
-@media (max-width: 768px) {
-  .black-card {
-    height: 150px;
-  }
 }
 
 .notification {
