@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="app/public/js/angular.min.js"></script>
   <link rel="stylesheet" href="app/public/css/mobile-angular-ui-base.min.css">
   <link rel="stylesheet" href="app/public/css/mobile-angular-ui-desktop.min.css">
+  <script src="app/public/js/angular.min.js"></script>
   <script src="app/public/js/db-api.js"></script>
   <script src="app/public/js/card-session.js"></script>
   <script src="login.js"></script>
@@ -14,6 +14,7 @@
   <script src="app/public/js/angular-route.min.js"></script>
   <script src="app/public/js/angular-cookies.min.js"></script>
   <script src="app/public/js/angular-touch.min.js"></script>
+  <script src="app/public/js/angular-animate.min.js"></script>
   <script src="app/public/js/mobile-angular-ui.min.js"></script>
   <script src="angular-app/dist/application.js"></script>
   <link rel="stylesheet" href="angular-app/dist/application.css">
@@ -42,7 +43,7 @@
 
       <div class="btn-group pull-right" yield-to="navbarAction">
         <div class="btn btn-navbar" ng-click="toggle('right-sidebar')">
-          <i class="fa fa-bell-o"></i> News
+          <i class="fa fa-bell-o"></i>
         </div>
       </div>
     </nav>
@@ -83,43 +84,42 @@
   </script>
 
   <script type="text/ng-template" id="templates/new-game.html">
-    <div ng-controller="NewGamesController" class="app-content">
-      <div class="scrollable">
-        <div class="scrollable-content">
-          <h3>Choose your card</h3>
-          <div class="col-sm-4 col-xs-12" ng-repeat="card in blackCards" ng-click="selectCard(card.id_bc)">
-            <button class="black-card">
-              {{ card.text }}
-            </button>
-          </div>
+    <div class="scrollable" ng-controller="NewGamesController">
+      <div class="scrollable-content">
+        <h3>Choose your card</h3>
+        <div class="col-sm-4 col-xs-12" ng-repeat="card in blackCards"
+          ng-click="selectCard(card.id_bc)">
+          <button class="black-card">
+            {{ card.text }}
+          </button>
         </div>
       </div>
     </div>
   </script>
 
   <script type="text/ng-template" id="templates/all-games.html">
-    <div class="app-content" ng-controller="GamesIndexController">
-      <div class="scrollable">
-        <div class="scrollable-content">
-          <h3>Nearby Games</h3>
-          <div class="col-xs-12 col-sm-6" ng-repeat="session in sessions">
-            <a class="btn black-card" ng-href="#/game/{{session.fk_blackCards}}">
+    <div class="scrollable" ng-controller="GamesIndexController">
+      <div class="scrollable-content">
+        <h3>Nearby Games</h3>
+        <div class="col-xs-12 col-sm-6" ng-repeat="session in sessions" data-index="{{sessions.indexOf(session)}}">
+          <a href="" ng-href="#/game/{{session.fk_blackCards}}">
+            <button class="black-card">
               Missing Text {{session.text}}
-            </a>
-          </div>
+            </button>
+          </a>
         </div>
       </div>
     </div>
   </script>
 
   <script type="text/ng-template" id="templates/stats.html">
-    <div class="app-content">
+    <div>
       <h3>My Stats</h3>
     </div>
   </script>
 
   <script type="text/ng-template" id="templates/show-game.html">
-    <div class="app-content scrollable" ng-controller="GamesController">
+    <div class="scrollable" ng-controller="GamesController">
       <div class="scrollable-content">
         <button class="black-card">{{ game.blackCard.text }}</button>
         <div ng-if="game.mine">

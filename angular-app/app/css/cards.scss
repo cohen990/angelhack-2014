@@ -1,6 +1,22 @@
 $black: #000;
 $white: #fff;
 
+@mixin css-transition($args...) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+
+@mixin css-transform($args...) {
+  -webkit-transform: $args;
+  -moz-transform: $args;
+  -ms-transform: $args;
+  -o-transform: $args;
+  transform: $args;
+}
+
 .black-card {
   background-color: $black;
   color: $white;
@@ -45,4 +61,22 @@ $white: #fff;
   top: 50%;
   margin-left: -25px;
   margin-top: -25px;
+}
+
+.app-content {
+  .anim-pop {
+    &.ng-enter {
+      @include css-transition(all 0.3s ease);
+    }
+    &.ng-leave {
+      @include css-transition(all 0.3s 0.3s ease);
+    }
+
+    &.ng-enter, &.ng-leave-active, &.ng-move {
+      @include css-transform(scale(0));
+    }
+    &.ng-leave, &.ng-enter-active, &.ng-move-active {
+      @include css-transform(scale(1));
+    }
+  }
 }

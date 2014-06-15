@@ -3,7 +3,7 @@
 
   angular.module('Games').controller('GamesIndexController', ['$scope', 'UsersService',
     function($scope, UsersService) {
-      $scope.sessions = [];
+      $scope.sessions = null;
 
       UsersService.getAvailableSessions(function(sessions) {
         $scope.sessions = sessions;

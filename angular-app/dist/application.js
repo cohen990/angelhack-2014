@@ -2,7 +2,8 @@
   'use strict';
 
   window.App = angular.module('App', ['Games', 'Users', 'mobile-angular-ui',
-                              'ngRoute', 'ngTouch', 'GeoLocation']);
+                              'ngRoute', 'ngTouch', 'GeoLocation', 'ngAnimate',
+                              'Animations']);
 
   window.App.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', { templateUrl: 'templates/all-games.html' });
@@ -10,6 +11,31 @@
     $routeProvider.when('/stats', { templateUrl: 'templates/stats.html' });
     $routeProvider.when('/game/:gameId', { templateUrl: 'templates/show-game.html' });
   });
+})();
+
+(function() {
+  'use strict';
+
+  angular.module('Animations', []);
+})();
+
+(function() {
+  'use strict';
+
+  angular.module('Animations').directive('animPop', [
+    function() {
+      return {
+        restrict: 'A',
+        link: function(scope, element, attr) {
+          var delay = Math.round(Math.random()*300 + 300);
+          element.css({
+            transitionDelay: '' + delay + 'ms',
+          });
+
+          element.addClass('anim-pop');
+        }
+      };
+  }]);
 })();
 
 (function() {
@@ -87,7 +113,7 @@
 
   angular.module('Games').controller('GamesIndexController', ['$scope', 'UsersService',
     function($scope, UsersService) {
-      $scope.sessions = [];
+      $scope.sessions = null;
 
       UsersService.getAvailableSessions(function(sessions) {
         $scope.sessions = sessions;
