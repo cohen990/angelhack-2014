@@ -35,3 +35,28 @@
   top: 50%;
   margin-left: -25px;
   margin-top: -25px; }
+
+.app-content .anim-pop.ng-enter {
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease; }
+.app-content .anim-pop.ng-leave {
+  -webkit-transition: all 0.3s 0.3s ease;
+  -moz-transition: all 0.3s 0.3s ease;
+  -ms-transition: all 0.3s 0.3s ease;
+  -o-transition: all 0.3s 0.3s ease;
+  transition: all 0.3s 0.3s ease; }
+.app-content .anim-pop.ng-enter, .app-content .anim-pop.ng-leave-active, .app-content .anim-pop.ng-move {
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  -o-transform: scale(0);
+  transform: scale(0); }
+.app-content .anim-pop.ng-leave, .app-content .anim-pop.ng-enter-active, .app-content .anim-pop.ng-move-active {
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  -o-transform: scale(1);
+  transform: scale(1); }
