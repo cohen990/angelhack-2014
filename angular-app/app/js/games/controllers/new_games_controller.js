@@ -1,8 +1,13 @@
 (function() {
   'use strict';
 
-  angular.module('Games').controller('NewGamesController', ['$scope', 'UsersService', '$location',
-    function($scope, UsersService, $location) {
+  angular.module('Games').controller('NewGamesController', ['$scope', 'UsersService', '$location', '$cookies',
+    function($scope, UsersService, $location, $cookies) {
+      if (!$cookies.UID) {
+        $location.path('/login');
+        return;
+      }
+
       $scope.blackCards = [];
 
       $scope.onBlackCardsAdded = function(cards) {
@@ -10,16 +15,11 @@
       };
 
       UsersService.addObserver($scope);
-      $scope.selectCard = function(id) {
-        init(id, UsersService.sessionId, function(data) {
-          if (data.error) {
-            console.log('Failed to start new game session');
-          } else {
-            $scope.$apply(function(scope) {
-              $location.path('/game/' + id);
-            });
-          }
+      $scope.selectCard = function(blackCard) {
+        var uid = UsersService.generateGUID();
+        UsersService.startNewGame(blackCard, uid, function(data, status, header, config) {
+          $location.path('/game/' + uid);
         });
-      }
+      };
   }]);
 })();
