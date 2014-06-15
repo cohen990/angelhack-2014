@@ -35,6 +35,12 @@ $white: #fff;
   font-size: 1.3em;
 }
 
+.card-blank {
+  color: red;
+  text-decoration: underline;
+  white-space: pre;
+}
+
 @media (max-width: 768px) {
   .black-card {
     height: 150px;

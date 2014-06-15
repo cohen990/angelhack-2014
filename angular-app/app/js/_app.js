@@ -3,7 +3,7 @@
 
   window.App = angular.module('App', ['Games', 'Users', 'mobile-angular-ui',
                               'ngRoute', 'ngTouch', 'GeoLocation', 'ngAnimate',
-                              'Animations']);
+                              'Animations', 'Filters', 'ngSanitize']);
 
   window.App.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', { templateUrl: 'templates/all-games.html' });
