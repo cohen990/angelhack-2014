@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://www.l2dev.dev/';
+$config['base_url']	= 'http://www.angelhack.dev/';
 
 /*
 |--------------------------------------------------------------------------
