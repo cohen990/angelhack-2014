@@ -5,6 +5,7 @@
     function($http, $cookies) {
       var self = this;
       var BASE_URL = 'http://37.187.225.223/angel/index.php/api';
+      self.BASE_URL = BASE_URL;
       self.observers = [];
       self.notificationsObserver = [];
       self.sessionId = self.sessionId || generateGUID();

@@ -6,7 +6,8 @@
                               'Animations', 'Filters', 'ngSanitize']);
 
   window.App.config(function($routeProvider, $locationProvider) {
-    $routeProvider.when('/', { templateUrl: 'templates/all-games.html' });
+    $routeProvider.when('/', { templateUrl: 'templates/login.html' });
+    $routeProvider.when('/games', { templateUrl: 'templates/all-games.html' });
     $routeProvider.when('/new-game', { templateUrl: 'templates/new-game.html' });
     $routeProvider.when('/stats', { templateUrl: 'templates/stats.html' });
     $routeProvider.when('/game/:gameId', { templateUrl: 'templates/show-game.html' });
@@ -49,6 +50,8 @@
 
   angular.module('Filters').filter('blackCardText', function() {
     return function(text) {
+      if (!text) return text;
+
       return text.replace(/_+/g, '<span class="card-blank">              </span>');
     };
   });
@@ -77,13 +80,14 @@
 
 (function() {
   'use strict';
+  var Games = angular.module('Games');
 
-  angular.module('Games').controller('GamesController', ['$scope', '$routeParams', 'UsersService', '$http',
+  Games.controller('GamesController', ['$scope', '$routeParams', 'UsersService', '$http',
     function($scope, $routeParams, UsersService, $http) {
       $scope.game = null;
 
       $scope.submitResponse = function(whiteCardId) {
-        UsersService.submitResponseFor($scope.game.blackCardId, whiteCardId, function() {
+        UsersService.submitResponseFor($scope.game.blackCard.id_sbc, whiteCardId, function() {
           console.log('Success!');
         });
       };
@@ -98,6 +102,7 @@
                 mine: true,
                 responses: null
               };
+              console.log(notifications[i]);
               UsersService.getResponsesFor(notifications[i].id_sbc,
                 function(data, status, headers, config) {
                   $scope.game.responses = data;
@@ -140,8 +145,8 @@
 (function() {
   'use strict';
 
-  angular.module('Games').controller('NewGamesController', ['$scope', 'UsersService',
-    function($scope, UsersService) {
+  angular.module('Games').controller('NewGamesController', ['$scope', 'UsersService', '$location',
+    function($scope, UsersService, $location) {
       $scope.blackCards = [];
 
       $scope.onBlackCardsAdded = function(cards) {
@@ -154,7 +159,9 @@
           if (data.error) {
             console.log('Failed to start new game session');
           } else {
-            console.log('New Game Session Started');
+            $scope.$apply(function(scope) {
+              $location.path('/game/' + id);
+            });
           }
         });
       }
@@ -216,10 +223,34 @@
 (function() {
   'use strict';
 
+  angular.module('Users').controller('UsersLoginController', ['$scope', '$http',
+                                     '$cookies', 'UsersService', '$location',
+    function($scope, $http, $cookies, UsersService, $location) {
+      if ($cookies.UID) {
+        $location.path('/games');
+        return;
+      }
+
+      $scope.user = { name: null };
+
+      $scope.submit = function(user) {
+        var uri = UsersService.BASE_URL + '/getLoginInformation/' + user.name;
+        $http({method: 'GET', url: uri}).success(function(data, status, headers, config) {
+          $cookies.UID = data;
+          $location.path('/games');
+        });
+      };
+  }]);
+})();
+
+(function() {
+  'use strict';
+
   angular.module('Users').service('UsersService', ['$http', '$cookies',
     function($http, $cookies) {
       var self = this;
       var BASE_URL = 'http://37.187.225.223/angel/index.php/api';
+      self.BASE_URL = BASE_URL;
       self.observers = [];
       self.notificationsObserver = [];
       self.sessionId = self.sessionId || generateGUID();

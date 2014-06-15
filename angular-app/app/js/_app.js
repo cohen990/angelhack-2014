@@ -6,7 +6,8 @@
                               'Animations', 'Filters', 'ngSanitize']);
 
   window.App.config(function($routeProvider, $locationProvider) {
-    $routeProvider.when('/', { templateUrl: 'templates/all-games.html' });
+    $routeProvider.when('/', { templateUrl: 'templates/login.html' });
+    $routeProvider.when('/games', { templateUrl: 'templates/all-games.html' });
     $routeProvider.when('/new-game', { templateUrl: 'templates/new-game.html' });
     $routeProvider.when('/stats', { templateUrl: 'templates/stats.html' });
     $routeProvider.when('/game/:gameId', { templateUrl: 'templates/show-game.html' });
