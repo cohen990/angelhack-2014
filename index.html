@@ -75,7 +75,7 @@
       <div class="scrollable-content">
         <div class="list-group" toggle="off" bubble target="right-sidebar">
           <a class="list-group-item btn notification"
-            ng-repeat="notification in notifications" ng-href="#/game/{{notification.id_sbc}}">
+            ng-repeat="notification in notifications" ng-href="#/game/{{notification.sid}}">
               {{ notification.text }}
           </a>
         </div>
@@ -101,7 +101,7 @@
       <div class="scrollable-content">
         <h3>Nearby Games</h3>
         <div class="col-xs-12 col-sm-6" ng-repeat="session in sessions" data-index="{{sessions.indexOf(session)}}">
-          <a href="" ng-href="#/game/{{session.fk_blackCards}}">
+          <a href="" ng-href="#/game/{{session.sid}}">
             <button class="black-card" ng-bind-html="session.text | blackCardText"></button>
           </a>
         </div>
@@ -123,18 +123,29 @@
         <button class="black-card" ng-bind-html="game.blackCard.text | blackCardText"></button>
         <div ng-if="game.mine">
           <h3>Responses so far</h3>
-          <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="response in game.responses">
+          <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="response in game.blackCard.responses">
             <button class="white-card">
-              {{ response.Response }}
+              {{ response.text }}
             </button>
+            <p>by {{ response.username }}</p>
           </div>
         </div>
         <div ng-if="!game.mine">
-          <h3>Pick one</h3>
-          <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="choice in game.choices">
-            <button class="white-card" ng-click="submitResponse(choice.id_wc)">
-              {{ choice.text }}
-            </button>
+          <div ng-if="game.myResponse">
+            <h3>You have already submitted</h3>
+            <div class="col-xs-12 col-sm-6 col-md-4">
+              <button class="white-card">
+                {{ game.myResponse.text }}
+              </button>
+            </div>
+          </div>
+          <div ng-if="!game.myResponse">
+            <h3>Pick one</h3>
+            <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="choice in game.choices">
+              <button class="white-card" ng-click="submitResponse(choice)">
+                {{ choice.text }}
+              </button>
+            </div>
           </div>
         </div>
       </div>

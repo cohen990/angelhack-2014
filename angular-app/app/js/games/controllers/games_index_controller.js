@@ -16,6 +16,7 @@
         } else {
           $scope.sessions = sessions;
         }
+        if (!$scope.$$phase) $scope.$digest();
       });
   }]);
 })();

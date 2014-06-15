@@ -8,18 +8,23 @@
         return;
       }
 
-      $scope.blackCards = [];
+      $scope.blackCards = null;
+      UsersService.getNewBlackCards(function(data) {
+        $scope.blackCards = data;
 
-      $scope.onBlackCardsAdded = function(cards) {
-        $scope.blackCards = cards;
-      };
+        if (!$scope.$$phase) $scope.$digest();
+      });
 
-      UsersService.addObserver($scope);
       $scope.selectCard = function(blackCard) {
-        var uid = UsersService.generateGUID();
-        UsersService.startNewGame(blackCard, uid, function(data, status, header, config) {
-          $location.path('/game/' + uid);
+        UsersService.getNewBlackCards(function(data) {
+          $scope.blackCards = data;
         });
+
+        var uid = UsersService.generateGUID();
+        UsersService.startNewGame(blackCard, uid);
+        $location.path('/game/' + uid);
+
+        if (!$scope.$$phase) $scope.$digest();
       };
   }]);
 })();
