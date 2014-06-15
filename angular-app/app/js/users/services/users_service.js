@@ -1,10 +1,8 @@
 (function() {
   'use strict';
 
-  var Users = angular.module('Users', []);
-
-  Users.service('UsersService', ['$http',
-    function($http) {
+  angular.module('Users').service('UsersService', ['$http', '$cookies',
+    function($http, $cookies) {
       var self = this;
       var BASE_URL = 'http://37.187.225.223/angel/index.php/api';
       self.observers = [];
@@ -29,7 +27,7 @@
         if (self.availableSessions) {
           callback(self.availableSessions);
         } else {
-          var uri = BASE_URL + '/getAllGamesAvailable/' + getCookie('UID');
+          var uri = BASE_URL + '/getAllGamesAvailable/' + $cookies.UID;
           $http({method: 'GET', url: uri})
             .success(function(data, status, headers, config) {
               self.availableSessions = data;
@@ -44,8 +42,8 @@
       };
 
       self.submitResponseFor = function(blackCardId, whiteCardId, callback) {
-        var uri = BASE_URL + '/setGameResponse/' + getCookie('UID') + '/' +
-          whiteCardId + '/' + UsersService.sessionId + '/' + blackCardId;
+        var uri = BASE_URL + '/setGameResponse/' + $cookies.UID + '/' +
+          whiteCardId + '/' + self.sessionId + '/' + blackCardId;
         $http({method: 'GET', url: uri}).success(callback);
       };
 
@@ -70,8 +68,7 @@
         self.notificationsObserver.push(observer);
       };
 
-      var uri = BASE_URL + '/getGameSession/' +
-        getCookie('UID');
+      var uri = BASE_URL + '/getGameSession/' + $cookies.UID;
       $http({method: 'GET', url: uri})
         .success(function(data, status, headers, config) {
           self.currentSessions = data;

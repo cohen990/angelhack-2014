@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  window.App = angular.module('App', ['Games', 'Users', 'mobile-angular-ui', 'ngRoute']);
+  window.App = angular.module('App', ['Games', 'Users', 'mobile-angular-ui', 'ngRoute', 'ngTouch']);
 
   window.App.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', { templateUrl: 'templates/all-games.html' });
@@ -14,11 +14,36 @@
 (function() {
   'use strict';
 
-  var Games = angular.module('Games', ['Users', 'ngRoute']);
+  angular.module('Games', ['Users', 'ngRoute']);
+})();
 
-  Games.controller('GamesController', ['$scope', '$routeParams', 'UsersService', '$http',
+(function() {
+  'use strict';
+
+  angular.module('Games').controller('GameNotificationsController', ['$scope', 'UsersService',
+    function($scope, UsersService) {
+      $scope.notifications = [];
+
+      $scope.onNotificationsUpdate = function(notifications) {
+        $scope.notifications = notifications;
+      }
+
+      UsersService.addNotificationObserver($scope);
+  }]);
+})();
+
+(function() {
+  'use strict';
+
+  angular.module('Games').controller('GamesController', ['$scope', '$routeParams', 'UsersService', '$http',
     function($scope, $routeParams, UsersService, $http) {
       $scope.game = null;
+
+      $scope.submitResponse = function(whiteCardId) {
+        UsersService.submitResponseFor($scope.game.blackCardId, whiteCardId, function() {
+          console.log('Success!');
+        });
+      };
 
       $scope.onNotificationsUpdate = function(notifications) {
         if ($routeParams.gameId && UsersService.currentSessions) {
@@ -54,19 +79,25 @@
 
       UsersService.addNotificationObserver($scope);
   }]);
+})();
 
-  Games.controller('GameNotificationsController', ['$scope', 'UsersService',
+(function() {
+  'use strict';
+
+  angular.module('Games').controller('GamesIndexController', ['$scope', 'UsersService',
     function($scope, UsersService) {
-      $scope.notifications = [];
+      $scope.sessions = [];
 
-      $scope.onNotificationsUpdate = function(notifications) {
-        $scope.notifications = notifications;
-      }
-
-      UsersService.addNotificationObserver($scope);
+      UsersService.getAvailableSessions(function(sessions) {
+        $scope.sessions = sessions;
+      });
   }]);
+})();
 
-  Games.controller('NewGamesController', ['$scope', 'UsersService',
+(function() {
+  'use strict';
+
+  angular.module('Games').controller('NewGamesController', ['$scope', 'UsersService',
     function($scope, UsersService) {
       $scope.blackCards = [];
 
@@ -85,24 +116,19 @@
         });
       }
   }]);
-
-  Games.controller('GamesIndexController', ['$scope', 'UsersService',
-    function($scope, UsersService) {
-      $scope.sessions = [];
-
-      UsersService.getAvailableSessions(function(sessions) {
-        $scope.sessions = sessions;
-      });
-  }]);
 })();
 
 (function() {
   'use strict';
 
-  var Users = angular.module('Users', []);
+  angular.module('Users', ['ngCookies']);
+})();
 
-  Users.service('UsersService', ['$http',
-    function($http) {
+(function() {
+  'use strict';
+
+  angular.module('Users').service('UsersService', ['$http', '$cookies',
+    function($http, $cookies) {
       var self = this;
       var BASE_URL = 'http://37.187.225.223/angel/index.php/api';
       self.observers = [];
@@ -127,7 +153,7 @@
         if (self.availableSessions) {
           callback(self.availableSessions);
         } else {
-          var uri = BASE_URL + '/getAllGamesAvailable/' + getCookie('UID');
+          var uri = BASE_URL + '/getAllGamesAvailable/' + $cookies.UID;
           $http({method: 'GET', url: uri})
             .success(function(data, status, headers, config) {
               self.availableSessions = data;
@@ -142,8 +168,8 @@
       };
 
       self.submitResponseFor = function(blackCardId, whiteCardId, callback) {
-        var uri = BASE_URL + '/setGameResponse/' + getCookie('UID') + '/' +
-          whiteCardId + '/' + UsersService.sessionId + '/' + blackCardId;
+        var uri = BASE_URL + '/setGameResponse/' + $cookies.UID + '/' +
+          whiteCardId + '/' + self.sessionId + '/' + blackCardId;
         $http({method: 'GET', url: uri}).success(callback);
       };
 
@@ -168,8 +194,7 @@
         self.notificationsObserver.push(observer);
       };
 
-      var uri = BASE_URL + '/getGameSession/' +
-        getCookie('UID');
+      var uri = BASE_URL + '/getGameSession/' + $cookies.UID;
       $http({method: 'GET', url: uri})
         .success(function(data, status, headers, config) {
           self.currentSessions = data;

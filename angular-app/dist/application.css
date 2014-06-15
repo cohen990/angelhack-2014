@@ -4,7 +4,8 @@
   border: 5px solid transparent;
   width: 100%;
   font-size: 1.5em;
-  height: 200px; }
+  height: 200px;
+  margin-bottom: 30px; }
 
 .white-card {
   margin-top: 20px;
@@ -15,8 +16,22 @@
 
 @media (max-width: 768px) {
   .black-card {
-    margin-bottom: 30px;
     height: 150px; } }
 .notification {
   white-space: normal;
   width: 100%; }
+
+.app-content-loading {
+  text-align: center;
+  height: 100%;
+  width: 100%;
+  color: white;
+  position: relative; }
+
+.loading-spinner {
+  position: absolute;
+  font-size: 50px;
+  left: 50%;
+  top: 50%;
+  margin-left: -25px;
+  margin-top: -25px; }
