@@ -6,10 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="app/public/css/mobile-angular-ui-base.min.css">
   <link rel="stylesheet" href="app/public/css/mobile-angular-ui-desktop.min.css">
+  <script src="http://cdn.pubnub.com/pubnub.min.js"></script>
   <script src="app/public/js/angular.min.js"></script>
   <script src="app/public/js/db-api.js"></script>
   <script src="app/public/js/card-session.js"></script>
-  <script src="login.js"></script>
   <script src="app/public/js/jquery-1.10.2.js"></script>
   <script src="app/public/js/angular-route.min.js"></script>
   <script src="app/public/js/angular-cookies.min.js"></script>
@@ -64,7 +64,6 @@
         <div class="list-group" toggle="off" bubble target="main-sidebar">
           <a class="list-group-item" href="#/games">Search <i class="fa fa-chevron-right pull-right"></i></a>
           <a class="list-group-item" href="#/new-game">New Game<i class="fa fa-chevron-right pull-right"></i></a>
-          <a class="list-group-item" href="#/stats">My Stats<i class="fa fa-chevron-right pull-right"></i></a>
         </div>
       </div>
     </div>
@@ -89,7 +88,7 @@
       <div class="scrollable-content">
         <h3>Choose your card</h3>
         <div class="col-sm-4 col-xs-12" ng-repeat="card in blackCards"
-          ng-click="selectCard(card.id_bc)">
+          ng-click="selectCard(card)">
           <button class="black-card" ng-bind-html="card.text | blackCardText">
           </button>
         </div>
@@ -133,7 +132,7 @@
         <div ng-if="!game.mine">
           <h3>Pick one</h3>
           <div class="col-xs-12 col-sm-6 col-md-4" ng-repeat="choice in game.choices">
-            <button class="white-card" ng-click="submitResponse(choice.id_bc)">
+            <button class="white-card" ng-click="submitResponse(choice.id_wc)">
               {{ choice.text }}
             </button>
           </div>
