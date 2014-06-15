@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  window.App = angular.module('App', ['Games', 'Users', 'mobile-angular-ui', 'ngRoute']);
+  window.App = angular.module('App', ['Games', 'Users', 'mobile-angular-ui', 'ngRoute', 'ngTouch']);
 
   window.App.config(function($routeProvider, $locationProvider) {
     $routeProvider.when('/', { templateUrl: 'templates/all-games.html' });
