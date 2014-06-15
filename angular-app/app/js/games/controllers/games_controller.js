@@ -1,12 +1,13 @@
 (function() {
   'use strict';
+  var Games = angular.module('Games');
 
-  angular.module('Games').controller('GamesController', ['$scope', '$routeParams', 'UsersService', '$http',
+  Games.controller('GamesController', ['$scope', '$routeParams', 'UsersService', '$http',
     function($scope, $routeParams, UsersService, $http) {
       $scope.game = null;
 
       $scope.submitResponse = function(whiteCardId) {
-        UsersService.submitResponseFor($scope.game.blackCardId, whiteCardId, function() {
+        UsersService.submitResponseFor($scope.game.blackCard.id_sbc, whiteCardId, function() {
           console.log('Success!');
         });
       };
@@ -21,6 +22,7 @@
                 mine: true,
                 responses: null
               };
+              console.log(notifications[i]);
               UsersService.getResponsesFor(notifications[i].id_sbc,
                 function(data, status, headers, config) {
                   $scope.game.responses = data;

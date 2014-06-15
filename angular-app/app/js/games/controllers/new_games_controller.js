@@ -1,8 +1,8 @@
 (function() {
   'use strict';
 
-  angular.module('Games').controller('NewGamesController', ['$scope', 'UsersService',
-    function($scope, UsersService) {
+  angular.module('Games').controller('NewGamesController', ['$scope', 'UsersService', '$location',
+    function($scope, UsersService, $location) {
       $scope.blackCards = [];
 
       $scope.onBlackCardsAdded = function(cards) {
@@ -15,7 +15,9 @@
           if (data.error) {
             console.log('Failed to start new game session');
           } else {
-            console.log('New Game Session Started');
+            $scope.$apply(function(scope) {
+              $location.path('/game/' + id);
+            });
           }
         });
       }
