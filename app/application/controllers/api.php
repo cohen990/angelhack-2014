@@ -64,13 +64,23 @@ class Api extends CI_Controller {
   }
 
   function getGameSession(){
-      // uid/card_id/session_id/timestamp
+      // uid
     $uid = $this->uri->segment(3);
    $res = $this->apimodel->getBlackCardsSession($uid);
     if($res){
       print json_encode($res);
     }else{
       print json_encode(array('error' => 'Session not started, missing information.'));
+    }
+  }
+
+  function getGameSessionBlackCard(){
+    $uid = $this->uri->segment(3);
+   $res = $this->apimodel->getGameSessionBlackCard($uid);
+    if($res){
+      print json_encode($res);
+    }else{
+      print json_encode(array('error' => 'No card called, missing information or card doesn\'t exists..'));
     }
   }
 
@@ -150,9 +160,37 @@ class Api extends CI_Controller {
     return true;
   }
 
-  //store game cards in a join
-  //set game session
-  //set card play 
+
+
+public function setWinnersGames() {
+// uid/sid/id_wc
+
+    $uid = $this->uri->segment(3);
+    $sid = $this->uri->segment(4);
+    $id_wc = $this->uri->segment(5);
+
+    if(!empty($uid) && !empty($card_id) && !empty($session_id)){
+      $data = array(
+        'id_gmw' => '',
+        'fk_uid' => $uid,
+        'fk_sid' => $sid,
+        'fk_wc' => $id_wc,
+      );
+        $this->apimodel->setWinner($data);
+      print json_encode(array('success' => 'Winner accepted.'));
+    }else{
+      print json_encode(array('error' => 'No winner assigned or missing information.'));
+    }
+  }
+public function getWinnersGames() {
+ $uid = $this->uri->segment(3);
+    $res = $this->apimodel->getWinner($uid);
+    if($res){
+      print json_encode($res);
+    }else{
+      print json_encode(array('error' => 'No games available, missing information.'));
+    }
+}
 
 }
 
