@@ -15,7 +15,7 @@ Class ApiModel extends CI_Model
     }
     function getWhiteCardsList($limit){
     	
-    	$query = $this->db->query("SELECT * FROM blackCards ORDER BY RAND() LIMIT $limit ");
+    	$query = $this->db->query("SELECT * FROM whiteCards ORDER BY RAND() LIMIT $limit ");
     	
     	$res= array();
     	foreach ($query->result() as $row)
@@ -75,13 +75,12 @@ ORDER BY id_sbc DESC");
 	}
 	function getWhiteCardsResponseSession($arg){
     	
-    	$query = $this->db->query("SELECT WhiteCards.text as Response, WhiteCards.id_wc as ResponseID FROM 
+    	$query = $this->db->query("SELECT * FROM 
 		sessionWhiteCards as sWhiteCards, 
-		blackCards as BlackCards,
 		whiteCards as WhiteCards
 	WHERE sWhiteCards.fk_whiteCards = WhiteCards.id_wc
-		AND BlackCards.id_bc = $arg
-ORDER BY id_bc DESC");
+		AND sWhiteCards.fk_sid = $arg
+ORDER BY id_wc DESC");
     	
     	$res= array();
     	foreach ($query->result() as $row)
@@ -91,7 +90,14 @@ ORDER BY id_bc DESC");
     	return $res;
     }
     function getAllGames($uid){
-    	$query = $this->db->query("SELECT * FROM angalhack.sessionBlackCards WHERE fk_uid != $uid ORDER BY id_sbc DESC");
+    	date_default_timezone_set("Europe/London");
+		$time = strtotime("-1 minute");
+
+    	$query = $this->db->query("SELECT * FROM angalhack.sessionBlackCards as sbc, blackCards as bc  
+	WHERE sbc.fk_uid != $uid 
+		AND sbc.fk_blackCards = bc.id_bc
+		AND sbc.time > $time
+ORDER BY id_sbc DESC");
     	
     	$res= array();
     	foreach ($query->result() as $row)
@@ -100,5 +106,33 @@ ORDER BY id_bc DESC");
 			}
     	return $res;
     }
+    function getGameSessionBlackCard($arg){
+
+    $query = $this->db->query("SELECT * FROM sessionBlackCards as sBlackCards, blackCards as BlackCards
+	WHERE sBlackCards.sid = '$arg'
+		AND sBlackCards.fk_blackCards = BlackCards.id_bc  
+ORDER BY id_sbc DESC ");
+    	
+    	$res= array();
+    	foreach ($query->result() as $row)
+			{
+			    $res[]= $row;
+			}
+    	return $res;
+	}
+	function setWinner($arg){
+		$this->db->insert('gameWinner',$arg);
+		return true;
+	}
+	function getWinner($arg){
+		$query = $this->db->query("SELECT * FROM gameWinner WHERE fk_uid = '$arg' ");
+    	
+    	$res= array();
+    	foreach ($query->result() as $row)
+			{
+			    $res[]= $row;
+			}
+    	return $res;
+	}
 }
 ?>		
