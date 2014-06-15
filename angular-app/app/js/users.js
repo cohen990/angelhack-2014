@@ -3,14 +3,16 @@
 
   var Users = angular.module('Users', []);
 
-  Users.service('UsersService', [
-    function() {
+  Users.service('UsersService', ['$http',
+    function($http) {
       var self = this;
+      var BASE_URL = 'http://37.187.225.223/angel/index.php/api';
       self.observers = [];
       self.notificationsObserver = [];
       self.sessionId = self.sessionId || generateGUID();
       self.blackCards = null;
       self.currentSessions = null;
+      self.availableSessions = null;
 
       function generateGUID() {
         function s4() {
@@ -23,12 +25,38 @@
                      s4() + '-' + s4() + s4() + s4();
       }
 
+      self.getAvailableSessions = function(callback) {
+        if (self.availableSessions) {
+          callback(self.availableSessions);
+        } else {
+          var uri = BASE_URL + '/getAllGamesAvailable/' + getCookie('UID');
+          $http({method: 'GET', url: uri})
+            .success(function(data, status, headers, config) {
+              self.availableSessions = data;
+              callback(data);
+            });
+        }
+      };
+
+      self.getResponsesFor = function(blackCardId, callback) {
+        var uri = BASE_URL + '/getGameResponse/' + blackCardId;
+        $http({method: 'GET', url: uri}).success(callback);
+      };
+
+      self.submitResponseFor = function(blackCardId, whiteCardId, callback) {
+        var uri = BASE_URL + '/setGameResponse/' + getCookie('UID') + '/' +
+          whiteCardId + '/' + UsersService.sessionId + '/' + blackCardId;
+        $http({method: 'GET', url: uri}).success(callback);
+      };
+
+      self.getRandomChoices = function(callback) {
+        var uri = BASE_URL + '/getRandomWhiteCard/5';
+        $http({method: 'GET', url: uri}).success(callback);
+      };
+
       self.addObserver = function(observer) {
         if (self.blackCards) {
-          observer.$apply(function(scope) {
-            scope.blackCards = self.blackCards;
-          });
-          observer.setBlackCards(self.blackCards);
+          observer.onBlackCardsAdded(self.blackCards);
         }
         if (self.observers.indexOf(observer) === -1) {
           self.observers.push(observer);
@@ -37,59 +65,28 @@
 
       self.addNotificationObserver = function(observer) {
         if (self.currentSessions) {
-          observer.$apply(function(scope) {
-            observer.notifications = self.currentSessions;
-          });
+          observer.onNotificationsUpdate(self.currentSessions);
         }
         self.notificationsObserver.push(observer);
       };
 
-      var uri = 'http://37.187.225.223/angel/index.php/api/getGameSession/' +
+      var uri = BASE_URL + '/getGameSession/' +
         getCookie('UID');
-      $.ajax({
-        dataType: 'json',
-        url: uri,
-        success: function(data) {
+      $http({method: 'GET', url: uri})
+        .success(function(data, status, headers, config) {
           self.currentSessions = data;
           for (var i = 0; i < self.notificationsObserver.length; i++) {
-            self.notificationsObserver[i].$apply(function(scope) {
-              scope.notifications = data;
-            });
+            self.notificationsObserver[i].onNotificationsUpdate(data);
           }
-        }
-      });
+        });
 
       Get3BlackCards(function(data) {
         for (var i = 0; i < self.observers.length; i++) {
           self.observers[i].$apply(function(scope) {
-            scope.blackCards = data;
+            scope.onBlackCardsAdded(data);
           });
         }
         self.blackCards = data;
       });
-  }]);
-
-  Users.controller('UserNotificationsController', ['$scope', 'UsersService',
-    function($scope, UsersService) {
-      $scope.notifications = [];
-
-      UsersService.addNotificationObserver($scope);
-  }]);
-
-  Users.controller('UsersController', ['$scope', 'UsersService',
-    function($scope, UsersService) {
-      $scope.blackCards = [];
-
-      UsersService.addObserver($scope);
-      $scope.selectCard = function(id) {
-        init(id, UsersService.sessionId, function(data) {
-          debugger
-          if (data.error) {
-            console.log('Failed to start new game session');
-          } else {
-            console.log('New Game Session Started');
-          }
-        });
-      }
   }]);
 })();

@@ -23,9 +23,9 @@
 
   <div ng-include="'templates/right-sidebar.html'" id="right-sidebar" toggleable
     class="sidebar sidebar-right" parent-active-class="sidebar-right-in"
-    ng-controller="UserNotificationsController"></div>
+    ng-controller="GameNotificationsController"></div>
 
-  <div ng-controller="UsersController" class="app has-navbar-top">
+  <div class="app has-navbar-top container">
     <nav class="navbar navbar-app navbar-absolute-top">
       <div class="navbar-brand navbar-brand-center">
         <span>Cards Against Humanity</span>
@@ -70,34 +70,68 @@
     <div class="sidebar-scrollable scrollable">
       <div class="scrollable-content">
         <div class="list-group" toggle="off" bubble target="right-sidebar">
-          <button class="list-group-item btn notification" ng-repeat="notification in notifications">
-            {{ notification.text }}
-          </button>
+          <a class="list-group-item btn notification"
+            ng-repeat="notification in notifications" ng-href="#/game/{{notification.id_sbc}}">
+              {{ notification.text }}
+          </a>
         </div>
       </div>
     </div>
   </script>
 
   <script type="text/ng-template" id="templates/new-game.html">
-    <div class="app-content">
-      <h3>Choose your card</h3>
-      <div class="col-sm-4 col-xs-12" ng-repeat="card in blackCards" ng-click="selectCard(card.id_bc)">
-        <button class="black-card">
-          {{ card.text }}
-        </button>
+    <div ng-controller="NewGamesController" class="app-content">
+      <div class="scrollable">
+        <div class="scrollable-content">
+          <h3>Choose your card</h3>
+          <div class="col-sm-4 col-xs-12" ng-repeat="card in blackCards" ng-click="selectCard(card.id_bc)">
+            <button class="black-card">
+              {{ card.text }}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </script>
 
-  <script type="text/ng-template" id="templates/search-games.html">
-    <div class="app-content">
-      <h3>Search for nearby games</h3>
+  <script type="text/ng-template" id="templates/all-games.html">
+    <div class="app-content" ng-controller="GamesIndexController">
+      <div class="scrollable">
+        <div class="scrollable-content">
+          <h3>Nearby Games</h3>
+          <a class="btn black-card" ng-href="#/game/{{session.fk_blackCards}}" ng-repeat="session in sessions">
+            {{session.text}}
+          </a>
+        </div>
+      </div>
     </div>
   </script>
 
   <script type="text/ng-template" id="templates/stats.html">
     <div class="app-content">
       <h3>My Stats</h3>
+    </div>
+  </script>
+
+  <script type="text/ng-template" id="templates/show-game.html">
+    <div class="app-content scrollable" ng-controller="GamesController">
+      <div class="scrollable-content">
+        <button class="black-card">{{ game.blackCard.text }}</button>
+        <div ng-show="game.mine">
+          <div class="col-xs-6 col-sm-4" ng-repeat="response in game.responses">
+            <button class="white-card">
+              {{ response.Response }}
+            </button>
+          </div>
+        </div>
+        <div ng-hide="game.mine">
+          <div class="col-xs-6 col-sm-4" ng-repeat="choice in game.choices">
+            <button class="white-card">
+              {{ choice.text }}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </script>
 </body>

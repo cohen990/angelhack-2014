@@ -6,8 +6,16 @@ $white: #fff;
   color: $white;
   border: 5px solid transparent;
   width: 100%;
-  font-size: 1.2em;
+  font-size: 1.5em;
   height: 200px;
+}
+
+.white-card {
+  margin-top: 20px;
+  background-color: $white;
+  height: 150px;
+  width: 100%;
+  font-size: 1.3em;
 }
 
 @media (max-width: 768px) {
